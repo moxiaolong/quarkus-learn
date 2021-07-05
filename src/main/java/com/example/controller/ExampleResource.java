@@ -1,11 +1,15 @@
-package com.example;
+package com.example.controller;
+
+import com.example.entity.Person;
+import com.example.service.ExampleService;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Future;
 
 @Path("/hello")
 public class ExampleResource {
@@ -49,9 +53,17 @@ public class ExampleResource {
      * quarkus-resteasy-mutiny扩展到你的项目中。
      */
 
-    @Path("reactive")
-    public Future<String> helloReactive() {
-        return null;
+    @GET
+    @Path("allPerson")
+    public Multi<Person> allPerson() {
+
+        return exampleService.getAllPerson();
+    }
+
+    @GET
+    @Path("addOne")
+    public Uni<Person> add() {
+        return exampleService.addPerson();
     }
 
 
