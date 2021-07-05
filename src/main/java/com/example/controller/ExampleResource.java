@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.entity.Person;
 import com.example.service.ExampleService;
+import io.quarkus.vertx.web.Route;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
@@ -9,6 +10,7 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Path("/hello")
@@ -27,7 +29,7 @@ public class ExampleResource {
      */
     @GET
     public Map<String, String> hello() {
-        //特别注意！！：如果是响应式的easyRest,执行阻塞代码时，需要用@Blocking标记，否则将阻塞vertX的eventLoop线程，可以通过断点发现当前代码的执行线程。
+        //如果是响应式的easyRest,执行阻塞代码时，需要用@Blocking标记，否则将阻塞vertX的eventLoop线程。
         try {
             Thread.sleep(5000L);
         } catch (InterruptedException e) {
@@ -61,10 +63,27 @@ public class ExampleResource {
     }
 
     @GET
-    @Path("addOne")
+    @Path("add")
     public Uni<Person> add() {
         return exampleService.addPerson();
     }
 
+    @GET
+    @Path("testBlock")
+    public Uni<List> testBlock() {
+        return exampleService.testBlock();
+    }
+
+    @GET
+    @Path("testBlock2")
+    public Uni<Person> testBlock2() {
+        return exampleService.testBlock2();
+    }
+
+    @GET
+    @Path("testBlock3")
+    public Uni<Person> testBlock3() {
+        return exampleService.testBlock3();
+    }
 
 }
