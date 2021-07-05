@@ -4,16 +4,19 @@ import com.example.entity.Person;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.core.Vertx;
-
+import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
 
 @ApplicationScoped
+@Slf4j
 public class ExampleService {
 
     @Inject
     Vertx vertx;
+
+
 
 
     /**
@@ -24,12 +27,10 @@ public class ExampleService {
     public Uni<Person> addPerson() {
         Person person = new Person();
         person.setName("测试");
-
         return person.persistAndFlush();
     }
 
     public Multi<Person> getAllPerson() {
-
         return Person.find("name", "测试").stream();
     }
 
@@ -38,7 +39,12 @@ public class ExampleService {
      */
     public Uni<List> testBlock() {
         return Person.getSession().createNativeQuery(
-                "SELECT NOW() as now,SLEEP(10),NOW() as away", List.class).getSingleResult();
+                "SELECT NOW() as now,SLEEP(10),NOW() as away", List.class).getSingleResult().onSubscribe().invoke(
+                () -> {
+                    log.info("被订阅了");
+
+                }
+        );
     }
 
     /**
@@ -53,7 +59,14 @@ public class ExampleService {
                     }
                     return new Person();
                 }
-        );
+        ).call(person -> {
+            try {
+                Thread.sleep(5000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return Uni.createFrom().item(person);
+        });
     }
 
 

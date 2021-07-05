@@ -35,8 +35,6 @@ public class ExampleResource {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-
         return new HashMap<>(1) {{
             put("hello", "World");
         }};
@@ -58,7 +56,6 @@ public class ExampleResource {
     @GET
     @Path("allPerson")
     public Multi<Person> allPerson() {
-
         return exampleService.getAllPerson();
     }
 
