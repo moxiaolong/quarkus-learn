@@ -1,16 +1,18 @@
 package com.example.controller;
 
 import com.example.entity.Person;
+import com.example.exceptionmapper.BusinessException;
+import com.example.exceptionmapper.ErrorEnum;
 import com.example.service.ExampleService;
-import com.example.view.Views;
-import com.fasterxml.jackson.annotation.JsonView;
-import io.quarkus.vertx.web.Route;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,14 +57,14 @@ public class ExampleResource {
      * quarkus-resteasy-mutiny扩展到你的项目中。
      */
 
-    @JsonView(Views.Private.class)
+
     @GET
     @Path("allPerson")
     public Multi<Person> allPerson() {
         return exampleService.getAllPerson();
     }
 
-    @JsonView(Views.Public.class)
+
     @GET
     @Path("allPersonPublic")
     public Multi<Person> allPersonPublic() {
@@ -97,6 +99,33 @@ public class ExampleResource {
     @Path("testBlock4")
     public Uni<Person> testBlock4() {
         return exampleService.testBlock4();
+    }
+
+    @POST
+    @Path("testValidator")
+    public Uni<Person> testValidator(@Valid Person person) {
+        return Uni.createFrom().item(person);
+    }
+
+    @GET
+    @Path("testResponse")
+    public Uni<Response> testValidator() {
+        // return Uni.createFrom().item().build());
+        return null;
+    }
+
+
+    @GET
+    @Path("testException")
+    public Uni testException() {
+        throw new RuntimeException("runtime");
+    }
+
+    @GET
+    @Path("testBusinessException")
+    public Uni testBusinessException() {
+       //return Uni.createFrom().item(Response.serverError().entity(ErrorEnum.UNKNOWN).build());
+        throw new RuntimeException("1111");
     }
 
 }
