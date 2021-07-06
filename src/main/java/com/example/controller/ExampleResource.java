@@ -2,6 +2,8 @@ package com.example.controller;
 
 import com.example.entity.Person;
 import com.example.service.ExampleService;
+import com.example.view.Views;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.quarkus.vertx.web.Route;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -53,9 +55,17 @@ public class ExampleResource {
      * quarkus-resteasy-mutiny扩展到你的项目中。
      */
 
+    @JsonView(Views.Private.class)
     @GET
     @Path("allPerson")
     public Multi<Person> allPerson() {
+        return exampleService.getAllPerson();
+    }
+
+    @JsonView(Views.Public.class)
+    @GET
+    @Path("allPersonPublic")
+    public Multi<Person> allPersonPublic() {
         return exampleService.getAllPerson();
     }
 
@@ -81,6 +91,12 @@ public class ExampleResource {
     @Path("testBlock3")
     public Uni<Person> testBlock3() {
         return exampleService.testBlock3();
+    }
+
+    @GET
+    @Path("testBlock4")
+    public Uni<Person> testBlock4() {
+        return exampleService.testBlock4();
     }
 
 }
