@@ -4,6 +4,7 @@ import com.example.entity.Person;
 import com.example.exceptionmapper.BusinessException;
 import com.example.exceptionmapper.ErrorEnum;
 import com.example.service.ExampleService;
+import io.quarkus.vertx.web.Route;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
@@ -21,6 +22,7 @@ import java.util.Map;
 public class ExampleResource {
     @Inject
     ExampleService exampleService;
+
 
     /**
      * 项目是通过quarkus:Dev启动的，无需启动类
