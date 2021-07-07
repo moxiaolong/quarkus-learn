@@ -23,6 +23,8 @@ public class ThrowableExceptionMapper implements ExceptionMapper<Throwable> {
 
         log.error(exception.getMessage(), exception);
         String message = exception.getMessage();
+
+        //根据环境决定是否隐藏异常详情
         if ("prod".equals(profile)) {
             message = "未知错误";
         }

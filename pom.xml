@@ -50,6 +50,9 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-reactive-panache</artifactId>
         </dependency>
+
+
+
         <!-- JDBC driver dependencies -->
         <dependency>
             <groupId>io.quarkus</groupId>

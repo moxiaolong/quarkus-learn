@@ -1,19 +1,18 @@
 package com.example.controller;
 
 import com.example.entity.Person;
-import com.example.exceptionmapper.BusinessException;
-import com.example.exceptionmapper.ErrorEnum;
+import com.example.intercepter.MyEvent;
 import com.example.service.ExampleService;
-import io.quarkus.vertx.web.Route;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.vertx.ext.web.RoutingContext;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Context;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +21,10 @@ import java.util.Map;
 public class ExampleResource {
     @Inject
     ExampleService exampleService;
+
+    @Context
+    RoutingContext routingContext;
+
 
 
     /**
@@ -111,9 +114,10 @@ public class ExampleResource {
 
     @GET
     @Path("testResponse")
-    public Uni<Response> testValidator() {
+    @MyEvent
+    public Uni<Integer> testValidator() {
         // return Uni.createFrom().item().build());
-        return null;
+        return Uni.createFrom().item(1);
     }
 
 
@@ -126,8 +130,22 @@ public class ExampleResource {
     @GET
     @Path("testBusinessException")
     public Uni testBusinessException() {
-       //return Uni.createFrom().item(Response.serverError().entity(ErrorEnum.UNKNOWN).build());
+        //return Uni.createFrom().item(Response.serverError().entity(ErrorEnum.UNKNOWN).build());
         throw new RuntimeException("1111");
+    }
+
+    @GET
+    @Path("testContext")
+    public Uni testContext() {
+        return Uni.createFrom().item(() -> routingContext.get("user"));
+    }
+
+    @GET
+    @Path("testContext2")
+    public Uni testContext2() {
+        //null
+        Object o = routingContext.get("user");
+        return Uni.createFrom().item(o);
     }
 
 }
